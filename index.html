@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="face-api.min.js"></script>
+</head>
+
+<style>
+    video {
+        position: fixed;
+    }
+    
+    canvas {
+        border: 1px solid red;
+        position: fixed;
+        top: 10;
+        left: 10;
+    }
+</style>
+
+<body>
+    <img src="" alt="">
+    <video id="video" width="720px" height="560px" autoplay muted></video>
+</body>
+
+<script>
+    const vid = document.getElementById("video");
+
+    Promise.all([faceapi.nets.tinyFaceDetector.loadFromUri('/models'), faceapi.nets.faceLandmark68Net.loadFromUri('/models'), faceapi.nets.faceRecognitionNet.loadFromUri('/models'), faceapi.nets.faceExpressionNet.loadFromUri('/models')])
+        .then(startVideo)
+
+    function startVideo() {
+        navigator.getUserMedia({
+                video: {}
+            },
+            stream => video.srcObject = stream,
+            err => console.error(err)
+        )
+    }
+
+    vid.addEventListener('play', () => {
+        const cv2 = document.createElement("canvas");
+        const ctx2 = cv2.getContext("2d");
+        const cvs = faceapi.createCanvasFromMedia(vid);
+        cvs.width = vid.width
+        cvs.height = vid.height
+        document.body.append(cvs)
+        document.body.append(cv2)
+        const si = setInterval(async() => {
+            const displaySize = {
+                width: vid.width,
+                height: vid.height
+            }
+            const detections = await faceapi.detectAllFaces(vid, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
+            const resizedDetections = faceapi.resizeResults(detections, displaySize)
+            cvs.getContext("2d").clearRect(0, 0, cvs.width, cvs.height)
+            faceapi.draw.drawDetections(cvs, resizedDetections)
+            faceapi.draw.drawFaceLandmarks(cvs, resizedDetections)
+            faceapi.draw.drawFaceExpressions(cvs, resizedDetections)
+            cv2.width = 300
+            cv2.height = 300
+            ctx2.drawImage(vid, resizedDetections[0].detection._box._x / 1.3, resizedDetections[0].detection._box._y / 2, vid.width, vid.height, 0, 0, vid.width, vid.height)
+            if (detections != "") {
+                clearInterval(si)
+            }
+        }, 100)
+    })
+</script>
+
+</html>
