@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./../../lib/jquery.min.js"></script>
+</head>
+<style>
+    body {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .loader {
+        width: 100vw;
+        height: 100vh;
+        background-image: url("https://i.pinimg.com/originals/c7/e1/b7/c7e1b7b5753737039e1bdbda578132b8.gif");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+    
+    .data-x-img {
+        border-radius: 10px;
+        color: white;
+        padding: 10px;
+        border: 1px solid gray;
+        background: linear-gradient(40deg, rgb(95, 120, 189), rgb(0, 0, 114));
+    }
+    
+    img {
+        border-radius: 10px;
+    }
+</style>
+
+<body>
+    <div class="loader"></div>
+</body>
+<script>
+    fetch("./../../php/save_image.php")
+        .then(e => e.text())
+        .then(data => {
+            JSON.parse(data).map((d) => {
+                var ele = document.createElement("div");
+                ele.innerHTML = `<div class="data-x-img"><h4>${d.id}</h4><img src="${d.image_base64}" width="200" height="200"><p>${d.time_stamp}</p>`;
+                document.body.append(ele);
+            })
+        })
+        .then(() => document.querySelector(".loader").remove())
+        .catch(err => console.error(err))
+</script>
+
+</html>

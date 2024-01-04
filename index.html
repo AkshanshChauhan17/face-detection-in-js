@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="./face-api.min.js"></script>
+    <script src="./lib/face-api.min.js"></script>
     <script src="./lib/jquery.min.js"></script>
 </head>
 
@@ -43,6 +43,7 @@
     <textarea id="data" readonly></textarea>
     <img src="" alt="">
     <video id="video" width="720px" height="560px" autoplay muted></video>
+    <a href="./pages/get_image/">View Image</a>
 </body>
 
 <script>
@@ -71,7 +72,7 @@
 
     function sendPhoto(i) {
         $.ajax({
-            url: "http://localhost/save_image.php",
+            url: "./php/save_image.php",
             method: "POST",
             data: {
                 "upload_image": i
@@ -86,7 +87,7 @@
     }
 
     click_sound.onloadeddata = () => {
-        vid.addEventListener('play', () => {
+        vid.addEventListener('play', async() => {
             const cv2 = document.createElement("canvas");
             const ctx2 = cv2.getContext("2d");
             const cvs = faceapi.createCanvasFromMedia(vid);
@@ -113,9 +114,9 @@
                     clearInterval(si)
                     click_sound.play()
                     document.getElementById("data").innerText = JSON.stringify(detections);
-                    sendPhoto(cv2.toDataURL())
+                    await sendPhoto(cv2.toDataURL())
                 }
-            }, 100)
+            }, 1000)
         })
     }
 </script>
