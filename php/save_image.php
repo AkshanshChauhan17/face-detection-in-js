@@ -34,7 +34,7 @@
             die("Connection failed: " . $connection->connect_error);
         }
 
-        if($connection->query("INSERT INTO face (image_base64) VALUES ('$image_data')") === TRUE) {
+        if($connection->query("INSERT INTO face (image_base64) VALUES ('$image_data')") == TRUE) {
             echo json_encode(["MESSAGE"=>"DATA SUCCESSFULLY UPLOADED"]);
         } else {
             echo json_encode(["ERROR"=>"ERROR: " . $connection->error]);
@@ -48,7 +48,7 @@
             GET_IMAGES();
             break;
         case "POST":
-            POST_IMAGE($_POST['upload_image']);
+            POST_IMAGE($_POST["upload_image"]);
             break;
         default:
             http_response_code(404);
