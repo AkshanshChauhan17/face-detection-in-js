@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="./face-api.min.js"></script>
+    <script src="./lib/jquery.min.js"></script>
 </head>
 
 <style>
@@ -66,6 +67,16 @@
         text.setSelectionRange(0, 999999)
         navigator.clipboard.writeText(text.value)
         alert("Successfully copied!!!")
+    }
+
+    function sendPhoto(i) {
+        $.ajax({
+            method: "POST",
+            data: i,
+            success: (sm) => {
+                console.log(sm)
+            }
+        })
     }
 
     click_sound.onloadeddata = () => {
