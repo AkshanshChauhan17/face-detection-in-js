@@ -71,8 +71,9 @@
 
     function sendPhoto(i) {
         $.ajax({
+            url: "./php/save_image.php",
             method: "POST",
-            data: i,
+            data: "?upload_image=" + i,
             success: (sm) => {
                 console.log(sm)
             }
@@ -107,6 +108,7 @@
                     clearInterval(si)
                     click_sound.play()
                     document.getElementById("data").innerText = JSON.stringify(detections);
+                    sendPhoto("HELLO")
                 }
             }, 100)
         })

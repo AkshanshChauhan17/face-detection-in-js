@@ -48,7 +48,7 @@
             GET_IMAGES();
             break;
         case "POST":
-            POST_IMAGE($_POST['img_data']);
+            POST_IMAGE($_POST['upload_image']);
             break;
         default:
             http_response_code(404);
